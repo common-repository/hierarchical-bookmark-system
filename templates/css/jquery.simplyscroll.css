@@ -1,0 +1,463 @@
+/*
+ * simplyScroll 2 - a scroll-tastic jQuery plugin
+ *
+ * http://logicbox.net/jquery/simplyscroll
+ *
+ * Copyright (c) 2009-2012 Will Kelly - http://logicbox.net
+ *
+ * Dual licensed under the MIT and GPL licenses.
+ *
+ * Last revised: 31/01/2012
+ *
+ */
+
+/* Default/Master classes 
+
+Example markup format (for horizontal scroller)
+Note all DIVs are generated and should not be hard-coded
+
+<div class="your-custom-class simply-scroll-container">
+	<div class="simply-scroll-btn simply-scroll-btn-left"></div>
+	<div class="simply-scroll-btn simply-scroll-btn-right"></div>
+	<div class="simply-scroll-clip">
+		<ul class="simply-scroll-list">
+			<li>...</li>
+			...
+		</ul>
+	</div>
+</div>
+
+
+*/
+
+.simply-scroll-container { /* Container DIV - automatically generated */
+	position: relative;
+	overflow: visible;
+}
+
+	.simply-scroll-clip { /* Clip DIV - automatically generated */
+		position: relative;
+		overflow: hidden;
+	}
+
+	.simply-scroll-list { /* UL/OL/DIV - the element that simplyScroll is inited on */
+		overflow: hidden;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	
+		.simply-scroll-list li {
+			padding: 0;
+			margin: 0;
+			list-style: none;
+		}
+	
+		.simply-scroll-list li img {
+			border: none;
+			display: block;
+		}
+	
+	.simply-scroll-btn {
+		position: absolute;
+		background-image: url(buttons.png);
+		width: 42px;
+		height: 44px;
+		z-index:3;
+		cursor: pointer;
+	}
+	
+	.simply-scroll-btn-left {
+		left: 6px;
+		bottom: 6px;
+		background-position: 0 -44px;
+	}
+	.simply-scroll-btn-left.disabled {
+		background-position: 0 0 !important;
+	}
+	.simply-scroll-btn-left:hover, .simply-scroll-btn-left:focus {
+		background-position: 0 -88px;
+	}
+	
+	.simply-scroll-btn-right {
+		right: 6px;
+		bottom: 6px;
+		background-position: -84px -44px;
+		
+	}
+	.simply-scroll-btn-right.disabled {
+		background-position: -84px 0 !important;
+	}
+	.simply-scroll-btn-right:hover, .simply-scroll-btn-right:focus {
+		background-position: -84px -88px;
+	}
+	
+	.simply-scroll-btn-up {
+		right: 6px;
+		top: 6px;
+
+		background-image: url(arrow-up.png);
+		width: 20px;
+		height:20px;
+		
+	}
+	.simply-scroll-btn-up.disabled {
+		background-image: url(arrow-up.png);
+		width: 20px;
+		height:20px;
+	}
+	.simply-scroll-btn-up:hover, .simply-scroll-btn-up:focus {
+		
+	}
+	
+	.simply-scroll-btn-down {
+		right: 6px;
+		bottom: 6px;
+		background-image: url(arrow-down.png);
+		width: 20px;
+		height:20px;
+	}
+	.simply-scroll-btn-down.disabled {
+		background-image: url(arrow-down.png);
+		width: 20px;
+		height:20px;
+	}
+	.simply-scroll-btn-down:hover, .simply-scroll-btn-down:focus {
+		
+	}
+	
+	.simply-scroll-btn-pause {
+		right: 6px;
+		bottom: 6px;
+		background-position: -168px -44px;
+	}
+	.simply-scroll-btn-pause:hover, .simply-scroll-btn-pause:focus {
+		background-position: -168px -88px;
+	}
+	
+	.simply-scroll-btn-pause.active {
+		background-position: -84px -44px;
+	}
+	.simply-scroll-btn-pause.active:hover, .simply-scroll-btn-pause.active:focus {
+		background-position: -84px -88px;
+	}
+
+/* Custom class modifications - override classees
+
+.simply-scroll is default
+
+*/
+
+.simply-scroll { /* Customisable base class for style override DIV */
+	width: 576px;
+	height: 200px;
+	margin-bottom: 1em;
+}
+
+	.simply-scroll .simply-scroll-clip {
+		width: 576px;
+		height: 200px;
+	}
+	
+		.simply-scroll .simply-scroll-list {}
+		
+		.simply-scroll .simply-scroll-list li {
+			float: left;
+			width: 290px;
+			height: 200px;
+		}
+		.simply-scroll .simply-scroll-list li img {}
+	
+	.simply-scroll .simply-scroll-btn {}
+	
+	.simply-scroll .simply-scroll-btn-left {}
+	.simply-scroll .simply-scroll-btn-left.disabled {}
+	.simply-scroll .simply-scroll-btn-left:hover {}
+	
+	.simply-scroll .simply-scroll-btn-right {}
+	.simply-scroll .simply-scroll-btn-right.disabled {}
+	.simply-scroll .simply-scroll-btn-right:hover {}
+	
+	.simply-scroll .simply-scroll-btn-up {}
+	.simply-scroll .simply-scroll-btn-up.disabled {}
+	.simply-scroll .simply-scroll-btn-up:hover {}
+	
+	.simply-scroll .simply-scroll-btn-down {}
+	.simply-scroll .simply-scroll-btn-down.disabled {}
+	.simply-scroll .simply-scroll-btn-down:hover {}
+	
+
+
+/* Vertical scroller example */
+
+.vert { /* wider than clip to position buttons to side */
+	height: 220px;
+	margin-bottom: 1.5em;
+			background-color: #ffffff;
+	color:#000;
+
+}
+
+
+
+.vert a{
+	color:#000;
+	text-decoration: none;
+}
+
+	.vert .simply-scroll-clip {
+		width: 100%;
+		height: 180px;
+		margin: 20px 0px;
+		float: left;
+		overflow:hidden;
+	}
+	
+		.vert .simply-scroll-list {}
+		
+		.vert .simply-scroll-list li {
+			height: auto;
+			padding: 0px 5px;
+			text-align: left;
+		}
+		.vert .simply-scroll-list li a{
+		
+		}
+		.vert .simply-scroll-list li:hover{ 
+			background-color: #4281f4;
+			
+		}
+		
+		.vert .simply-scroll-list li:hover a{
+			color: #fff;
+		}
+		
+		li.main span.edit{
+			float: right;
+			background-image: url(pencil_edit.png);
+			background-repeat: no-repeat;
+			width: 16px ;
+			height: 16px;
+			margin-top: 4px;
+			cursor: pointer;
+			display: none;
+			margin-right: 5px;
+		}
+		li.tree-view > span.edit{
+			/* margin-right: 20px; */
+		}
+		
+		#scroller li.main a.delete{
+			float: right !important;
+			background-image: url(delete.png);
+			background-repeat: no-repeat;
+			width: 16px !important;
+			height: 16px;
+			margin-top: 4px;
+			cursor: pointer;
+			display: none !important;
+		}
+		#scroller .main:hover span.edit{
+			display: block;
+		}
+		#scroller .main:hover a.delete{
+			display: block !important;
+		}
+		#scroller li.tree-view > a.delete{
+			margin-right: 20px;
+		}
+		#scroller li.tree-view > a.edit{
+			/* margin-right: 5px; */
+		}
+		
+		.vert .simply-scroll-list li img {}
+	
+	.vert .simply-scroll-btn {}
+
+	.vert .simply-scroll-btn-up { /* modified btn pos */
+		right: 50%;
+		top: 0;
+	}
+	.vert .simply-scroll-btn-up.disabled {}
+	.vert .simply-scroll-btn-up:hover {}
+	
+	.vert .simply-scroll-btn-down { /* modified btn pos */
+		right: 50%;
+		bottom: 0px;
+	}
+	.vert .simply-scroll-btn-down.disabled {}
+	.vert .simply-scroll-btn-down:hover {}
+	
+	
+	ul.no-scroller li {
+			height: auto;
+			padding: 0px 5px;
+			text-align: left;
+		}
+	ul.no-scroller li:hover{ 
+			background-color: #4281f4;
+			
+		}
+	ul.no-scroller li:hover a{
+			color: #fff;
+		}	
+	ul.no-scroller a{
+		color:#000; 
+		text-decoration: none;
+	}	
+	h3{
+		text-align:left;
+		background-color: #ffffff;
+		border-bottom: 1px solid #ccc;
+		padding: 10px 0px 10px 5px;
+		margin:0px 0;
+	}
+	h3.add_head{
+		border-top: 1px solid #ccc;
+		border-bottom: none;
+	}
+	/* NOTE left-right classes wouldn't be needed on vertical scroller */
+
+
+	
+#scroller{
+    margin:3px;
+}
+
+#scroller > li{            /* Top Level */
+    margin-right:3px;
+	padding:0px 12px; 
+	/* width:100px; */
+
+}
+
+#scroller > li.tree-view{
+	padding:0px 5px;
+}
+
+#scroller > li:hover{
+color:#fff;
+}
+#scroller  li{
+	margin:0px;
+}
+#scroller  li a{
+	text-overflow: ellipsis;
+    white-space: nowrap;
+	overflow: hidden;
+	display: block;
+	width: 75%;
+	float:left;
+}
+#scroller > li > a{
+    display:block;
+    /* background:#0ac; */
+   
+	
+}
+#scroller > li:hover > a{
+    color:#fff;
+	float:left;
+}
+
+#scroller > li > ul, #scroller > li > ul > div.vert{        /* Second Level */
+    display:none;
+    background:#fff;
+	
+	border-top:none;
+}
+#scroller > li  > .vert{
+	display:none;	
+	height:220px;
+}
+#scroller > li  > .vert .simply-scroll-clip{
+	height:180px;
+}
+#scroller > li:hover > ul, #scroller > li:hover > div.vert{
+    display:block;
+    position:absolute;
+	right: 8px;
+	max-width: 60%;
+	min-width: 35%;
+	border: 1px solid #CCCCCC;
+	z-index: 9999;
+}
+
+#scroller > li:hover > div.vert  a{
+	color:#000;
+}
+
+#scroller > li:hover > div.vert  a:hover{
+	color:#fff;
+}
+
+#scroller > li > ul > li > a{
+    display:block;
+	color: #000;
+    /* padding:3px 10px;
+    border-top:solid 3px #fff; */
+}
+#scroller > li > ul > li:hover > a{
+    color:#fff;
+}
+
+#scroller > li > ul li > ul{   /* Third Level & beyond */
+    display:none;
+    background:#068;
+}
+#scroller > li > ul li:hover > ul{
+    display:block;
+    position:absolute;
+    left:100%;
+    border-left:solid 3px #fff;
+    top: auto;
+    width:auto;
+    margin-top: -27px;
+}
+#scroller > li > ul > li ul > li{
+    display:block;
+    padding:3px 10px;
+    border-top:solid 3px #fff;
+    white-space:nowrap;
+}
+#scroller > li > ul > li ul > li:hover > span{
+    color:#fff;
+}
+
+#scroller li.tree-view{
+	background-image: url(arrow-right-b.png);
+	background-repeat: no-repeat;
+	background-position: 99% center;
+}
+#scroller li.tree-view:hover{
+	background-image: url(arrow-down-b.png);
+}
+
+  div.block {
+    position: relative;
+    background-color: #abc;
+    width: 40px;
+    height: 40px;
+    float: left;
+    margin: 5px;
+	width: 500px;
+	overflow: hidden;
+  }
+  .bspan{
+	position: relative;
+	white-space: nowrap;
+	text-align: right;
+	right: -480px;
+  }	
+  
+#loading_box {
+	background: url(ajax-loader.gif) no-repeat rgba(255, 255, 255, 0.5);	
+	width: 500px;
+	height: 250px;
+	vertical-align:middle;
+	background-position: center;
+
+}
+div.add_edit{
+	position: relative;
+}  
